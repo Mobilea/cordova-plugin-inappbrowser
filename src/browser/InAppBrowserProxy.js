@@ -22,7 +22,9 @@
 var cordova = require('cordova'),
     channel = require('cordova/channel'),
     urlutil = require('cordova/urlutil');
+    modulemapper = require('cordova/modulemapper');
 
+var origOpenFunc = modulemapper.getOriginalSymbol(window, 'window.open');
 var browserWrap,
     popup,
     navigationButtonsDiv,
@@ -72,7 +74,8 @@ var IAB = {
             url;
 
         if (target === "_system" || target === "_self" || !target) {
-            window.location = strUrl;
+            //window.location = strUrl;
+            origOpenFunc.apply(window, [strUrl, '_blank']);
         } else {
             // "_blank" or anything else
             if (!browserWrap) {
